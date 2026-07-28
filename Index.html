@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0907">
+<title>AURUM AI Founder Edition</title>
+<style>
+:root{--bg:#0a0907;--card:#17140f;--line:#3a3122;--gold:#e6bd52;--gold2:#fff0a3;--text:#fff8df;--muted:#aaa18c;--green:#5adf92;--red:#ff7277;--amber:#ffc85b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#2c2413 0,#0a0907 35%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{max-width:900px;margin:auto;padding:16px 16px 100px}.top{display:flex;justify-content:space-between;align-items:center;padding:8px 0 18px}.brand{font-weight:900;letter-spacing:.15em}.brand span{color:var(--gold)}.status{font-size:12px;color:var(--amber)}
+.card{background:linear-gradient(180deg,#1b1812,#11100d);border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:14px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.signal{font-size:64px;font-weight:950;margin:8px 0}.eyebrow{font-size:11px;letter-spacing:.15em;color:var(--gold);font-weight:800}.muted{color:var(--muted);line-height:1.5}.meter{height:11px;background:#2c281f;border-radius:20px;overflow:hidden}.meter div{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.row{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid #302a20}.row:last-child{border-bottom:0}.row strong{text-align:right}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.price{font-size:34px;font-weight:900}.btn{width:100%;padding:14px;border:0;border-radius:13px;background:linear-gradient(135deg,#caa64b,#f0d77c);font-weight:900;color:#171208;margin-top:14px}
+canvas{width:100%;height:320px;background:#0b0a08;border-radius:14px;margin-top:12px}
+.models{display:grid;grid-template-columns:1fr 1fr;gap:8px}.model{display:flex;justify-content:space-between;padding:10px;background:#211d16;border:1px solid #373126;border-radius:11px;font-size:13px}.buy{color:var(--green)}.sell{color:var(--red)}.wait{color:var(--amber)}
+.nav{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);display:grid;grid-template-columns:repeat(4,1fr);width:min(600px,calc(100% - 20px));background:#17140f;border:1px solid var(--line);border-radius:18px;padding:6px}.nav button{border:0;background:transparent;color:var(--muted);padding:10px 4px;font-size:11px;font-weight:800}.nav button.active{background:#302a20;color:white;border-radius:12px}
+.page{display:none}.page.active{display:block}label{display:block;margin:12px 0;color:var(--muted)}input{width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:#211d16;color:white;margin-top:6px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}.models{grid-template-columns:1fr}.signal{font-size:56px}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top"><div class="brand"><span>AURUM</span> AI</div><div class="status">● SIMULATED LIVE</div></div>
+
+<section id="home" class="page active">
+<div class="card">
+<div class="eyebrow">FOUNDER DECISION ENGINE</div>
+<div class="signal" id="signal">WAIT</div>
+<p class="muted" id="reason">Aurum is evaluating trend, momentum, market structure, liquidity, volatility and risk.</p>
+<div style="display:flex;justify-content:space-between;align-items:end;gap:15px"><div style="flex:1"><span class="muted">Confidence</span><div class="meter"><div id="meter"></div></div></div><strong id="confidence" style="font-size:36px">0%</strong></div>
+</div>
+
+<div class="card">
+<h2>Your Professional Gold Trader</h2>
+<div class="row"><span>1. Should I trade?</span><strong id="trade">NO — WAIT</strong></div>
+<div class="row"><span>2. Exact entry</span><strong id="entry">—</strong></div>
+<div class="row"><span>3. Exit if wrong</span><strong id="stop">—</strong></div>
+<div class="row"><span>4. Take profits</span><strong id="targets">—</strong></div>
+<div class="row"><span>Suggested size</span><strong id="size">0.00 lots</strong></div>
+<button class="btn" id="record">Record Paper Trade</button>
+</div>
+
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:end"><div><h2>XAU/USD</h2><span class="price" id="price">—</span></div><strong id="change">—</strong></div>
+<canvas id="chart"></canvas>
+</div>
+</section>
+
+<section id="modelsPage" class="page">
+<div class="card"><h2>20-Model Consensus</h2><div class="models" id="models"></div></div>
+</section>
+
+<section id="journalPage" class="page">
+<div class="card"><h2>Paper Trade Journal</h2><div id="journal" class="muted">No paper trades recorded.</div></div>
+</section>
+
+<section id="settingsPage" class="page">
+<div class="card">
+<h2>Risk Settings</h2>
+<label>Paper balance ($)<input id="balance" type="number" value="10000"></label>
+<label>Risk per trade (%)<input id="risk" type="number" value="0.5" step="0.1" min="0.1" max="1"></label>
+<button class="btn" id="save">Save Settings</button>
+</div>
+</section>
+</div>
+
+<nav class="nav">
+<button class="active" data-page="home">Home</button>
+<button data-page="modelsPage">Models</button>
+<button data-page="journalPage">Journal</button>
+<button data-page="settingsPage">Settings</button>
+</nav>
+
+<script>
+const $=id=>document.getElementById(id);
+let candles=[],lastSignal=null;
+const names=["EMA 9/21","EMA 21/50","SMA 20/50","RSI","Momentum","Rate of Change","Trend Slope","Breakout","Bollinger","MACD Proxy","ATR Expansion","Candle Pressure","Higher Highs","Lower Lows","VWAP Proxy","Donchian","Z-Score","Impulse","Trend Regime","Consensus Guard"];
+const avg=a=>a.reduce((s,v)=>s+v,0)/a.length;
+function ema(a,n){let e=a[0],k=2/(n+1);for(const v of a.slice(1))e=v*k+e*(1-k);return e}
+function sma(a,n){return avg(a.slice(-n))}
+function sd(a,n){let x=a.slice(-n),m=avg(x);return Math.sqrt(avg(x.map(v=>(v-m)**2)))}
+function rsi(a,n=14){let g=0,l=0;for(let i=a.length-n;i<a.length;i++){let d=a[i]-a[i-1];d>0?g+=d:l-=d}return l?100-100/(1+g/l):100}
+function atr(c,n=14){let x=[];for(let i=c.length-n;i<c.length;i++)x.push(Math.max(c[i].high-c[i].low,Math.abs(c[i].high-c[i-1].close),Math.abs(c[i].low-c[i-1].close)));return avg(x)}
+function sig(v,b=.15,s=-.15){return v>b?"BUY":v<s?"SELL":"WAIT"}
+function makeData(n=180){let p=2380,out=[];for(let i=0;i<n;i++){let o=p,d=(Math.random()-.5)*4+Math.sin(i/15)*.8,c=o+d,h=Math.max(o,c)+Math.random()*1.8,l=Math.min(o,c)-Math.random()*1.8;out.push({open:o,high:h,low:l,close:c});p=c}return out}
+function analyze(){
+ let a=candles.map(x=>x.close),p=a.at(-1),A=atr(candles),R=rsi(a),e9=ema(a.slice(-60),9),e21=ema(a.slice(-80),21),e50=ema(a,50),s20=sma(a,20),s50=sma(a,50),v=sd(a,20),prev=a.at(-2);
+ let m=[sig(e9-e21),sig(e21-e50,.2,-.2),sig(s20-s50,.2,-.2),R<30?"BUY":R>70?"SELL":"WAIT",sig(p-a.at(-11),.8,-.8),sig((p/a.at(-13)-1)*100,.05,-.05),sig((p-a.at(-20))/20,.05,-.05),sig(p-Math.max(...a.slice(-20,-1)),.1,-999),p<s20-1.8*v?"BUY":p>s20+1.8*v?"SELL":"WAIT",sig((e9-e21)-(ema(a.slice(-40),5)-ema(a.slice(-40),13)),.05,-.05),Math.abs(p-prev)>A*1.2?sig(p-prev,.1,-.1):"WAIT",sig((p-candles.at(-1).open)/(A||1),.2,-.2),p>a.at(-3)?"BUY":"WAIT",p<a.at(-3)?"SELL":"WAIT",sig(p-sma(a,30),.2,-.2),sig(p-(Math.max(...a.slice(-20))+Math.min(...a.slice(-20)))/2,.3,-.3),(p-s20)/(v||1)<-1.3?"BUY":(p-s20)/(v||1)>1.3?"SELL":"WAIT",sig((p-a.at(-4))/(A||1),.5,-.5),Math.abs(e21-e50)>A*.4?sig(e21-e50,.2,-.2):"WAIT",(R>45&&R<65&&e9>e21)?"BUY":(R<55&&R>35&&e9<e21)?"SELL":"WAIT"];
+ let buy=m.filter(x=>x==="BUY").length,sell=m.filter(x=>x==="SELL").length,net=buy-sell,conf=Math.min(96,Math.round(Math.abs(net)/20*100+Math.abs(net)*1.2)),decision=net>=6?"BUY":net<=-6?"SELL":"WAIT";
+ let distance=Math.max(A*1.5,2.5),dir=decision==="SELL"?-1:1,balance=+$("balance").value||10000,risk=balance*(Math.min(1,+$("risk").value||.5)/100),lots=decision==="WAIT"?0:Math.max(.01,Math.min(5,risk/(distance*100)));
+ lastSignal={decision,confidence:conf,entry:p,stop:decision==="WAIT"?null:p-dir*distance,tp1:decision==="WAIT"?null:p+dir*distance*1.2,tp2:decision==="WAIT"?null:p+dir*distance*2,lots,time:new Date().toISOString()};
+ $("signal").textContent=decision;$("confidence").textContent=conf+"%";$("meter").style.width=conf+"%";$("trade").textContent=decision==="WAIT"?"NO — WAIT":"YES — "+decision;$("entry").textContent=decision==="WAIT"?"—":(p-A*.12).toFixed(2)+"–"+(p+A*.12).toFixed(2);$("stop").textContent=lastSignal.stop?lastSignal.stop.toFixed(2):"—";$("targets").textContent=lastSignal.tp1?lastSignal.tp1.toFixed(2)+" / "+lastSignal.tp2.toFixed(2):"—";$("size").textContent=lots.toFixed(2)+" lots";
+ $("reason").textContent=decision==="WAIT"?"Signals are mixed. The professional decision is no trade.":decision==="BUY"?"The model consensus currently favors a long paper setup. Wait for the entry zone.":"The model consensus currently favors a short paper setup. Wait for the entry zone.";
+ $("models").innerHTML=names.map((n,i)=>'<div class="model"><span>'+n+'</span><strong class="'+m[i].toLowerCase()+'">'+m[i]+'</strong></div>').join("");
+ draw();
+}
+function draw(){let cv=$("chart"),ctx=cv.getContext("2d"),dpr=devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;cv.width=w*dpr;cv.height=h*dpr;ctx.scale(dpr,dpr);let x=candles.slice(-70),mn=Math.min(...x.map(c=>c.low)),mx=Math.max(...x.map(c=>c.high)),pad=20,px=(w-pad*2)/x.length,py=v=>pad+(mx-v)/(mx-mn)*(h-pad*2);ctx.clearRect(0,0,w,h);x.forEach((c,i)=>{let xx=pad+i*px+px/2,up=c.close>=c.open;ctx.strokeStyle=up?"#5adf92":"#ff7277";ctx.fillStyle=ctx.strokeStyle;ctx.beginPath();ctx.moveTo(xx,py(c.high));ctx.lineTo(xx,py(c.low));ctx.stroke();ctx.fillRect(xx-px*.25,Math.min(py(c.open),py(c.close)),Math.max(2,px*.5),Math.max(2,Math.abs(py(c.open)-py(c.close))))});let p=x.at(-1).close,pr=x.at(-2).close;$("price").textContent=p.toFixed(2);let ch=p-pr;$("change").textContent=(ch>=0?"+":"")+ch.toFixed(2);$("change").className=ch>=0?"positive":"negative"}
+function tick(){let c=candles.at(-1),o=c.close,d=(Math.random()-.5)*2;candles.push({open:o,high:Math.max(o,o+d)+Math.random()*.7,low:Math.min(o,o+d)-Math.random()*.7,close:o+d});if(candles.length>220)candles.shift();analyze()}
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));b.classList.add("active");$(b.dataset.page).classList.add("active");if(b.dataset.page==="home")setTimeout(draw,20)});
+$("record").onclick=()=>{if(!lastSignal||lastSignal.decision==="WAIT"){alert("No qualifying setup.");return}let t=JSON.parse(localStorage.getItem("aurumTrades")||"[]");t.push(lastSignal);localStorage.setItem("aurumTrades",JSON.stringify(t));$("journal").textContent=t.length+" paper trade(s) recorded.";alert("Paper trade recorded.")};
+$("save").onclick=()=>{localStorage.setItem("aurumBalance",$("balance").value);localStorage.setItem("aurumRisk",$("risk").value);analyze();alert("Settings saved.")};
+candles=makeData();$("balance").value=localStorage.getItem("aurumBalance")||10000;$("risk").value=localStorage.getItem("aurumRisk")||0.5;analyze();setInterval(tick,5000);
+</script>
+</body>
+</html>

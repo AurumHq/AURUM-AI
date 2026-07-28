@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070707">
+<title>AURUM AI — Founder Edition</title>
+<style>
+:root{
+  --bg:#070707;--panel:#111;--panel2:#171717;--line:#2a2a2a;
+  --gold:#d4af37;--gold2:#f1d477;--text:#f6f6f6;--muted:#9c9c9c;
+  --green:#33d17a;--red:#ff5f66;--amber:#ffbf47;--blue:#5ba7ff;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:
+  radial-gradient(circle at 18% 0%,rgba(212,175,55,.12),transparent 30%),
+  radial-gradient(circle at 82% 10%,rgba(76,90,255,.08),transparent 28%),
+  var(--bg);
+  color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+}
+button,input,select{font:inherit}
+.topbar{
+  position:sticky;top:0;z-index:50;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:16px;padding:14px 18px;
+  background:rgba(7,7,7,.94);backdrop-filter:blur(16px);
+  border-bottom:1px solid #2d250e;
+}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{
+  width:42px;height:42px;border-radius:13px;
+  background:linear-gradient(145deg,#ffe49b,#9b7300);
+  box-shadow:0 0 28px rgba(212,175,55,.24);
+}
+.brand h1{margin:0;color:var(--gold2);font-size:18px;letter-spacing:.18em}
+.brand small{color:var(--muted);letter-spacing:.12em}
+.status{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.pill{border:1px solid var(--line);border-radius:999px;padding:8px 11px;color:var(--muted);font-size:12px}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;background:var(--amber);box-shadow:0 0 12px currentColor}
+.wrap{max-width:1500px;margin:auto;padding:16px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tab{
+  border:1px solid #303030;background:#101010;color:#a7a7a7;
+  padding:9px 13px;border-radius:999px;cursor:pointer
+}
+.tab.active{background:var(--gold2);color:#111;border-color:var(--gold2)}
+.page{display:none}.page.active{display:block}
+.grid{display:grid;grid-template-columns:1.55fr .85fr;gap:16px}
+.stack{display:grid;gap:16px}
+.card{
+  background:linear-gradient(180deg,rgba(23,23,23,.98),rgba(13,13,13,.98));
+  border:1px solid var(--line);border-radius:18px;padding:18px;
+  box-shadow:0 12px 40px rgba(0,0,0,.28)
+}
+.card h2{margin:0 0 14px;font-size:14px;letter-spacing:.08em;text-transform:uppercase}
+.hero{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}
+.kicker{font-size:12px;color:var(--gold2);text-transform:uppercase;letter-spacing:.14em;margin-bottom:12px}
+.signal{font-size:66px;line-height:.9;font-weight:900}
+.signal.buy{color:var(--green)}.signal.sell{color:var(--red)}.signal.wait{color:var(--amber)}
+.conf{text-align:right;min-width:185px}
+.conf strong{font-size:42px}
+.bar{height:9px;background:#2a2a2a;border-radius:999px;overflow:hidden;margin-top:10px}
+.bar span{display:block;height:100%;width:54%;background:linear-gradient(90deg,var(--gold),#fff0ad)}
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:18px}
+.metric{background:#101010;border:1px solid #2a2a2a;border-radius:12px;padding:12px}
+.metric small{display:block;color:var(--muted);margin-bottom:6px}.metric strong{font-size:16px}
+.chart{height:520px;padding:0;overflow:hidden}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.models{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.model{background:#101010;border:1px solid #292929;border-radius:12px;padding:12px}
+.model-top{display:flex;justify-content:space-between;gap:10px}.score{font-weight:800;color:var(--gold2)}
+.micro{font-size:11px;color:var(--muted);margin-top:7px}
+.edge-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.edge{background:#0f0f0f;border:1px solid #292929;border-radius:12px;padding:12px}
+.edge b{display:block;font-size:13px;margin-bottom:4px}.edge span{font-size:11px;color:var(--muted)}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.field{margin-bottom:12px}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+.field input,.field select{width:100%;background:#0d0d0d;color:#fff;border:1px solid #303030;border-radius:10px;padding:11px}
+.btn{width:100%;border:0;border-radius:12px;padding:14px 16px;font-weight:800;cursor:pointer}
+.btn-gold{background:linear-gradient(90deg,#b78800,#f4d86c);color:#111}
+.btn-dark{background:#1b1b1b;color:#fff;border:1px solid #333}
+.notice{font-size:12px;line-height:1.55;color:#aaa;border-left:3px solid var(--gold);padding-left:12px}
+.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;font-size:13px}
+.table th,.table td{padding:10px;border-bottom:1px solid #292929;text-align:left}.table th{color:#aaa}
+.positive{color:var(--green)}.negative{color:var(--red)}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpi{background:#101010;border:1px solid #2a2a2a;border-radius:12px;padding:14px}
+.kpi b{font-size:22px}.kpi span{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.footer{padding:24px 0 40px;text-align:center;color:#777;font-size:11px}
+@media(max-width:980px){
+  .grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}.chart{height:430px}
+}
+@media(max-width:620px){
+  .wrap{padding:10px}.topbar{padding:12px}.status .pill:first-child{display:none}
+  .hero{grid-template-columns:1fr}.conf{text-align:left}.signal{font-size:50px}
+  .metrics,.models,.edge-grid,.kpi-grid{grid-template-columns:1fr}.chart{height:390px}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="logo"></div>
+    <div><h1>AURUM AI</h1><small>FOUNDER EDITION</small></div>
+  </div>
+  <div class="status">
+    <span class="pill"><span class="dot"></span>SIMULATED ENGINE</span>
+    <span class="pill" id="clock">--:--:-- ET</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="tabs">
+    <button class="tab active" data-page="dashboard">Dashboard</button>
+    <button class="tab" data-page="models">Model Lab</button>
+    <button class="tab" data-page="journal">Journal</button>
+    <button class="tab" data-page="analytics">Analytics</button>
+    <button class="tab" data-page="settings">Settings</button>
+  </div>
+
+  <section id="dashboard" class="page active">
+    <div class="grid">
+      <div class="stack">
+        <div class="card">
+          <div class="hero">
+            <div>
+              <div class="kicker">Founder decision engine</div>
+              <div id="signal" class="signal wait">WAIT</div>
+              <p id="rationale">Model agreement is not strong enough for a high-quality setup. Stand aside until structure, momentum, and execution quality align.</p>
+            </div>
+            <div class="conf">
+              <small>Calibrated confidence</small><br>
+              <strong id="confidence">54%</strong>
+              <div class="bar"><span id="confidenceBar"></span></div>
+            </div>
+          </div>
+
+          <div class="metrics">
+            <div class="metric"><small>Entry Zone</small><strong id="entry">—</strong></div>
+            <div class="metric"><small>Invalidation</small><strong id="stop">—</strong></div>
+            <div class="metric"><small>Target 1</small><strong id="tp1">—</strong></div>
+            <div class="metric"><small>Target 2</small><strong id="tp2">—</strong></div>
+            <div class="metric"><small>Suggested Risk</small><strong id="riskOut">0.50%</strong></div>
+          </div>
+        </div>
+
+        <div class="card chart">
+          <div class="tradingview-widget-container" style="height:100%;width:100%">
+            <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+            {"autosize":true,"symbol":"OANDA:XAUUSD","interval":"15","timezone":"America/New_York","theme":"dark","style":"1","locale":"en","backgroundColor":"rgba(7,7,7,1)","gridColor":"rgba(70,70,70,0.20)","hide_side_toolbar":false,"allow_symbol_change":false,"save_image":false,"calendar":false,"support_host":"https://www.tradingview.com"}
+            </script>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-head"><h2>Future Edge Stack</h2><span class="pill">Research Architecture</span></div>
+          <div class="edge-grid">
+            <div class="edge"><b>Causal Regime Graph</b><span>Links rates, USD, volatility, commodities, and risk sentiment.</span></div>
+            <div class="edge"><b>Liquidity Fracture Detector</b><span>Flags thin depth, false breaks, stop runs, and spread expansion.</span></div>
+            <div class="edge"><b>Uncertainty Calibration</b><span>Reduces confidence when data quality or model agreement deteriorates.</span></div>
+            <div class="edge"><b>Counterfactual Stress Engine</b><span>Tests the setup against abrupt macro and volatility shocks.</span></div>
+            <div class="edge"><b>Execution Quality Score</b><span>Separates market direction from whether the entry is actually tradeable.</span></div>
+            <div class="edge"><b>Self-Audit Layer</b><span>Tracks drift, overconfidence, drawdown clusters, and model decay.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stack">
+        <div class="card">
+          <h2>Risk Console</h2>
+          <div class="field"><label>Account Balance ($)</label><input id="balance" type="number" value="25000"></div>
+          <div class="row">
+            <div class="field"><label>Risk %</label><input id="riskPct" type="number" step="0.1" value="0.5"></div>
+            <div class="field"><label>Stop Distance ($)</label><input id="stopDist" type="number" step="0.01" value="4.00"></div>
+          </div>
+          <div class="metric"><small>Maximum Risk</small><strong id="maxRisk">$125.00</strong></div>
+          <div class="metric"><small>Estimated Position Size</small><strong id="lotSize">0.31 lots</strong></div>
+          <button class="btn btn-gold" id="recordTrade">Record Paper Trade</button>
+        </div>
+
+        <div class="card">
+          <div class="section-head"><h2>Market State</h2><button class="btn btn-dark" style="width:auto" id="refreshSignal">Refresh</button></div>
+          <div class="model"><div class="model-top"><span>Regime</span><span class="score" id="regime">Neutral</span></div><div class="micro">Simulated classification</div></div>
+          <div class="model"><div class="model-top"><span>Volatility</span><span class="score" id="volatility">Normal</span></div><div class="micro">Adaptive stop logic</div></div>
+          <div class="model"><div class="model-top"><span>Liquidity</span><span class="score" id="liquidity">Mixed</span></div><div class="micro">Execution filter</div></div>
+          <div class="model"><div class="model-top"><span>Data Integrity</span><span class="score">Demo</span></div><div class="micro">No live API keys connected</div></div>
+        </div>
+
+        <div class="card">
+          <h2>Guardrails</h2>
+          <p class="notice">This build is a research and paper-trading interface. The chart is live, but the AI signal outputs are simulated until verified market, macro, news, and execution APIs are connected through a secured backend.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="models" class="page">
+    <div class="card">
+      <div class="section-head"><h2>20-Model Ensemble</h2><button class="btn btn-dark" style="width:auto" id="rerunModels">Re-run Simulation</button></div>
+      <div id="modelGrid" class="models"></div>
+    </div>
+  </section>
+
+  <section id="journal" class="page">
+    <div class="card">
+      <div class="section-head"><h2>Paper Trade Journal</h2><button class="btn btn-dark" style="width:auto" id="clearJournal">Clear</button></div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead><tr><th>Time</th><th>Signal</th><th>Entry</th><th>Stop</th><th>TP1</th><th>Risk</th></tr></thead>
+          <tbody id="journalBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="analytics" class="page">
+    <div class="card">
+      <h2>Performance Analytics</h2>
+      <div class="kpi-grid">
+        <div class="kpi"><b id="tradeCount">0</b><span>Paper Trades</span></div>
+        <div class="kpi"><b id="buyCount">0</b><span>Buy Signals Logged</span></div>
+        <div class="kpi"><b id="sellCount">0</b><span>Sell Signals Logged</span></div>
+        <div class="kpi"><b>Demo</b><span>Data Status</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="settings" class="page">
+    <div class="grid">
+      <div class="card">
+        <h2>Engine Settings</h2>
+        <div class="field"><label>Risk Mode</label><select id="mode"><option>Balanced</option><option>Conservative</option><option>Aggressive</option></select></div>
+        <div class="field"><label>Preferred Timeframe</label><select id="timeframe"><option>15 minutes</option><option>1 hour</option><option>4 hours</option></select></div>
+        <button class="btn btn-gold" id="saveSettings">Save Settings</button>
+      </div>
+      <div class="card">
+        <h2>Privacy & Architecture</h2>
+        <p class="notice">Never place broker credentials, API keys, private datasets, or proprietary model code inside this public GitHub Pages file. Production secrets must live in a secured backend with authentication, rate limits, logging, and key rotation.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">AURUM AI Founder Edition • Built for Kehinda Mitchell • Research and paper trading only</div>
+</main>
+
+<script>
+const modelNames=["Trend Regime","Momentum","Mean Reversion","Liquidity Sweep","Market Structure","Order Flow Proxy","Volatility State","Dollar Correlation","Yield Sensitivity","Macro Nowcast","News Sentiment","Session Bias","Time-of-Day","Breakout Quality","False-Break Filter","Risk Engine","Execution Quality","Data Integrity","Model Drift","Ensemble Arbiter"];
+
+const $=id=>document.getElementById(id);
+
+function renderModels(){
+  $("modelGrid").innerHTML="";
+  modelNames.forEach(name=>{
+    const score=Math.round(35+Math.random()*45);
+    const bias=score>58?"SELL":score<44?"BUY":"WAIT";
+    $("modelGrid").insertAdjacentHTML("beforeend",
+      `<div class="model">
+        <div class="model-top"><span>${name}</span><span class="score">${bias} ${score}%</span></div>
+        <div class="micro">Simulated research output</div>
+      </div>`);
+  });
+}
+
+function randomSignal(){
+  const signals=["BUY","SELL","WAIT"];
+  const signal=signals[Math.floor(Math.random()*signals.length)];
+  const confidence=Math.round(44+Math.random()*31);
+  const base=2350+Math.random()*12;
+
+  $("signal").textContent=signal;
+  $("signal").className="signal "+signal.toLowerCase();
+  $("confidence").textContent=confidence+"%";
+  $("confidenceBar").style.width=confidence+"%";
+
+  if(signal==="BUY"){
+    $("rationale").textContent="Structure, momentum, and execution quality currently lean long. Enter only inside the defined zone.";
+    $("entry").textContent=(base-0.25).toFixed(2)+"–"+(base+0.25).toFixed(2);
+    $("stop").textContent=(base-4.10).toFixed(2);
+    $("tp1").textContent=(base+4.20).toFixed(2);
+    $("tp2").textContent=(base+7.30).toFixed(2);
+  }else if(signal==="SELL"){
+    $("rationale").textContent="Structure, momentum, and liquidity currently lean short. Wait for the defined entry zone.";
+    $("entry").textContent=(base-0.25).toFixed(2)+"–"+(base+0.25).toFixed(2);
+    $("stop").textContent=(base+4.10).toFixed(2);
+    $("tp1").textContent=(base-4.20).toFixed(2);
+    $("tp2").textContent=(base-7.30).toFixed(2);
+  }else{
+    $("rationale").textContent="Model agreement is not strong enough for a high-quality setup. Stand aside until conditions align.";
+    $("entry").textContent="—";$("stop").textContent="—";$("tp1").textContent="—";$("tp2").textContent="—";
+  }
+
+  const regimes=["Risk-On","Risk-Off","Neutral"];
+  const vols=["Low","Normal","Elevated"];
+  const liqs=["Strong","Mixed","Thin"];
+  $("regime").textContent=regimes[Math.floor(Math.random()*regimes.length)];
+  $("volatility").textContent=vols[Math.floor(Math.random()*vols.length)];
+  $("liquidity").textContent=liqs[Math.floor(Math.random()*liqs.length)];
+}
+
+function updateRisk(){
+  const bal=Number($("balance").value)||0;
+  const pct=Number($("riskPct").value)||0;
+  const dist=Math.max(Number($("stopDist").value)||0.01,.01);
+  const risk=bal*pct/100;
+  const lots=risk/(dist*100);
+  $("maxRisk").textContent=risk.toLocaleString("en-US",{style:"currency",currency:"USD"});
+  $("lotSize").textContent=Math.max(lots,0).toFixed(2)+" lots";
+  $("riskOut").textContent=pct.toFixed(2)+"%";
+}
+
+function getJournal(){return JSON.parse(localStorage.getItem("aurumJournal")||"[]")}
+function saveJournal(rows){localStorage.setItem("aurumJournal",JSON.stringify(rows))}
+function drawJournal(){
+  const rows=getJournal();
+  $("journalBody").innerHTML=rows.length?rows.map(r=>`
+    <tr>
+      <td>${r.time}</td>
+      <td class="${r.signal==="BUY"?"positive":"negative"}">${r.signal}</td>
+      <td>${r.entry}</td><td>${r.stop}</td><td>${r.tp1}</td><td>${r.risk}</td>
+    </tr>`).join(""):`<tr><td colspan="6" style="color:#777">No paper trades recorded.</td></tr>`;
+  $("tradeCount").textContent=rows.length;
+  $("buyCount").textContent=rows.filter(r=>r.signal==="BUY").length;
+  $("sellCount").textContent=rows.filter(r=>r.signal==="SELL").length;
+}
+
+document.querySelectorAll(".tab").forEach(btn=>btn.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+  btn.classList.add("active");$(btn.dataset.page).classList.add("active");
+});
+
+["balance","riskPct","stopDist"].forEach(id=>$(id).addEventListener("input",updateRisk));
+
+$("recordTrade").onclick=()=>{
+  const signal=$("signal").textContent;
+  if(signal==="WAIT"){alert("No trade recorded because the current signal is WAIT.");return}
+  const rows=getJournal();
+  rows.unshift({
+    time:new Date().toLocaleString(),
+    signal,
+    entry:$("entry").textContent,
+    stop:$("stop").textContent,
+    tp1:$("tp1").textContent,
+    risk:$("riskOut").textContent
+  });
+  saveJournal(rows.slice(0,100));drawJournal();alert("Paper trade recorded.");
+};
+
+$("clearJournal").onclick=()=>{localStorage.removeItem("aurumJournal");drawJournal()};
+$("rerunModels").onclick=()=>{renderModels();randomSignal()};
+$("refreshSignal").onclick=randomSignal;
+$("saveSettings").onclick=()=>{
+  localStorage.setItem("aurumSettings",JSON.stringify({mode:$("mode").value,timeframe:$("timeframe").value}));
+  alert("Settings saved locally.");
+};
+
+setInterval(()=>$("clock").textContent=new Date().toLocaleTimeString("en-US",{timeZone:"America/New_York"})+" ET",1000);
+
+renderModels();updateRisk();drawJournal();randomSignal();
+</script>
+</body>
+</html>
